@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>music player</title>
+    </head>
+    <style>
+        .center {
+            text-align: center;
+        }
+        h1 {
+            text-align: center;
+            height: 70px;
+            margin:5px 0px;
+        }
+        .right {
+            display: inline-block;
+            float: right;
+        }
+        song {
+            color: blue;
+            cursor: pointer;
+        }
+        #id-input-slider {
+            width: 100%;
+        }
+    </style>
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <script>
+        /*
+        需要注意的是, 你切换 audio.src 后调用 audio.play() 是无效的
+        因为浏览器需要一定的时间加载音乐文件, 你必须等待加载完成后才能播放
+        audio 标签有一个 canplay 事件, 会在加载结束后触发
+        在这个事件中调用播放函数即可解决问题
+
+        作业 4
+        实现单曲循环播放
+        audio 标签有一个 ended 事件, 会在播放结束后触发
+        用这个事件实现播放结束自动播放当前这首
+        (注意, 这里并不是使用 loop 属性实现的)
+
+        作业 5
+        实现循环播放列表
+        0, 用一个数组存储所有的音乐路径
+        1, audio 标签有一个 ended 事件, 会在播放结束后触发
+        用这个事件实现播放结束自动播放下一首
+
+        作业 6
+        实现随机播放
+        0, 用一个数组存储所有的音乐路径
+        1, audio 标签有一个 ended 事件, 会在播放结束后触发
+        用这个事件实现播放结束自动播放一首歌(这首歌是从数组中随机选择的, 不需要考虑随机的还是当前这首歌的情况)
+        */
+        var playerMode = 'loop'
+
+        // var playmode = {
+        //     'loop': loop,
+        //     'single': single,
+        //     'random': random,
+        // }
+
+        var playList = ['逍遥叹.mp3','Angelica.mp3','The Pirate That Should Not Be.mp3']
+
+        var log = console.log.bind(console)
+
+        var playerSetTime = function(value) {
+            var player = $("#id-audio-player")[0]
+            var time = player.duration * value / 100
+            player.currentTime = time
+        }
+
+        var setSlider = function(value) {
+            var v = value * 100
+            $('#id-input-slider').val(v)
+        }
+
+        var fill = function(t) {
+            var min = t.split(':')[0]
+            var sec = t.split(':')[1]
+            if (min.length == 1) {
+                var m = '0' + min
+            } else {
+                var m = min
+            }
+            if (sec.length == 1) {
+                var s = '0' + sec
+            } else {
+                var s = sec
+            }
+            var c = `${m}:${s}`
+            return c
+        }
+
+        var labelFromTime = function(time) {
+            var minutes = Math.floor(time / 60)
+            var seconds = Math.floor(time % 60)
+            var t = `${minutes}:${seconds}`
+            var ft = fill(t)
+            return ft
+        }
+
+        var bindSwitch = function() {
+            var player = $('#id-audio-player')[0]
+            $('song').on('click', function(e) {
+                var self = $(e.target)
+                var song = self.text()
+                log('click', song)
+                var folder = 'src/'
+                player.src = folder + song
+                var s = song.split('.')[0]
+                $('#id-h1-song-title').text(s)
+                var b = $('#id-button-play')[0]
+                // log(b)
+                b.dataset.action = 'pause'
+                b.innerText = '暂停'
+            })
+        }
+
+        var bindTimeSlider = function() {
+            var player = $('#id-audio-player')[0]
+            $('#id-input-slider').on('change', function(e) {
+                var value = e.target.value
+                log('change', typeof value, value)
+                playerSetTime(parseInt(value))
+            })
+        }
+
+        var bindAudioEvents = function() {
+            $('#id-audio-player').on('timeupdate', function(e) {
+                // "播放"--这个"过程"的事件
+                var player = e.target
+                var value = player.currentTime / player.duration
+                setSlider(value)
+                var time = labelFromTime(player.currentTime)
+                $('#id-time-current').text(time)
+            })
+            $('#id-audio-player').on('ended', function() {
+                log('play mode', playerMode)
+                // 根据播放模式播放下一首
+
+            })
+            $('#id-audio-player').on('canplay', function(e) {
+                log('canplay le!')
+                var player = e.target
+                var time = labelFromTime(player.duration)
+                $('#id-input-slider').val(0)
+                $('#id-time-current').text('00:00')
+                $('#id-time-duration').text(time)
+                player.volume = 0.4
+                // log('canplay paused situation', player.paused)
+                player.autoplay = true
+                log('canplay', player.src)
+            })
+        }
+
+        var prevSong = function() {
+            log("上一首")
+            var player = $('#id-audio-player')[0]
+            // log(player.src)
+        }
+
+        var playSong = function(button) {
+            var player = $('#id-audio-player')[0]
+            player.play()
+            // log(player.play)
+            button.dataset.action = 'pause'
+            button.innerText = '暂停'
+            log('play', player.src)
+        }
+
+        var pauseSong = function(button) {
+            var player = $('#id-audio-player')[0]
+            player.pause()
+            button.dataset.action = 'play'
+            button.innerText = '播放'
+        }
+
+        var nextSong = function() {
+            log("下一首")
+        }
+
+        var bindPlayEvents = function() {
+            $('.player-play').on('click', 'button', function(e) {
+                var button = e.target
+                var type = button.dataset.action
+                var actions = {
+                    prev: prevSong,
+                    next: nextSong,
+                    play: playSong,
+                    pause: pauseSong,
+                }
+                var action = actions[type]
+                action(button)
+            })
+        }
+
+        var playerSetPlayMode = function(mode) {
+            playerMode = mode
+        }
+
+        var bindModeEvents = function() {
+            $('.player-mode').on('click', 'button', function(e) {
+                var button = e.target
+                var mode = button.dataset.action
+                playerSetPlayMode(mode)
+            })
+        }
+
+        var bindEvents = function() {
+            bindSwitch()
+            bindTimeSlider()
+            bindAudioEvents()
+            bindPlayEvents()
+            bindModeEvents()
+        }
+
+        var __main = function() {
+            bindEvents()
+        }
+
+        $(document).ready(function() {
+            __main()
+        })
+    </script>
+    <body>
+        <audio id="id-audio-player" controls="controls">
+            <source src="src/逍遥叹.mp3">
+            <source src="src/Angelica.mp3">
+            <source src="src/The Pirate That Should Not Be.mp3">
+        </audio>
+        <div class="player-controls">
+            <div class="player-slider">
+                <input id="id-input-slider"type="range" value="0" min="0" max="100">
+            </div>
+            <div class="player-time">
+                <time id="id-time-current" class=left>0:00</time>
+                <time id="id-time-duration" class=right>2:31</time>
+            </div>
+            <h1 id="id-h1-song-title"></h1>
+            <div class="player-play center">
+                <button type="button" data-action=prev>上一首</button>
+                <button type="button" id="id-button-play" data-action=play>播放</button>
+                <button type="button" data-action=next>下一首</button>
+            </div>
+            <div class="player-mode">
+                <button type="button" data-action=single>单曲</button>
+                <button type="button" data-action=loop>循环</button>
+                <button type="button" data-action=random>随机</button>
+            </div>
+        </div>
+        <div class="play-list-container">
+            <ul class="play-list">
+                <li>
+                    <song>逍遥叹.mp3</song>
+                </li>
+                <li>
+                    <song>Angelica.mp3</song>
+                </li>
+                <li>
+                    <song>The Pirate That Should Not Be.mp3</song>
+                </li>
+            </ul>
+        </div>
+    </body>
+</html>
