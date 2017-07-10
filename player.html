@@ -6,6 +6,23 @@
         <title>music player</title>
     </head>
     <style>
+        .red {
+            color: red;
+            font-size: 16px;
+        }
+        .lrc {
+            width: 300px;
+            height: 290px;
+            overflow: hidden;
+            text-align: center;
+            font-size: 14px;
+            margin: 20px auto;
+            color: #ccc;
+            line-height: 20px;
+        }
+        #id-textarea-lrc {
+            display: none;
+        }
         .center {
             text-align: center;
         }
@@ -25,6 +42,11 @@
         #id-input-slider {
             width: 100%;
         }
+        #id-div-content {
+            position: relative;
+            top: 0px;
+        }
+
     </style>
     <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
     <script>
@@ -62,6 +84,10 @@
 
         var playList = ['逍遥叹.mp3','Angelica.mp3','The Pirate That Should Not Be.mp3']
 
+        var n = 0
+
+        var on_off = true
+
         var log = console.log.bind(console)
 
         var playerSetTime = function(value) {
@@ -98,6 +124,43 @@
             var t = `${minutes}:${seconds}`
             var ft = fill(t)
             return ft
+        }
+
+        var geci = function() {
+            var lrc = $('#id-textarea-lrc').text().split('[')
+            var content = document.getElementById('id-div-content')
+            var html = ''
+            for (var i = 0; i < lrc.length; i++) {
+                var lrcArr = lrc[i].split(']')
+                var time = lrcArr[0].split('.')
+                var times = time[0].split(':')
+                var sec = times[0] * 60 + times[1] * 1
+                if (lrcArr[1]) {
+                    html += `<p id=${sec}>${lrcArr[1]}</p>`
+                }
+            }
+            content.insertAdjacentHTML('beforeend', html)
+
+            var p = $('p')
+            // log('p', p)
+            var n = 0
+            $("#id-audio-player").on('timeupdate', function(e) {
+                var player = e.target
+                var cur = parseInt(player.currentTime)
+                var ps = document.getElementById(cur)
+                // log('fuck', ps, $(cur))
+                if (ps) {
+                    for (var i = 0; i < p.length; i++) {
+                        p[i].classList.remove('red')
+                    }
+                    ps.classList.add('red')
+                    if (p[5+n].id == cur) {
+                        // log('p.id', p[5+n].id)
+                        content.style.top = -20 * n + 'px'
+                        n ++
+                    }
+                }
+            })
         }
 
         var bindSwitch = function() {
@@ -150,7 +213,7 @@
                 player.volume = 0.4
                 // log('canplay paused situation', player.paused)
                 player.autoplay = true
-                log('canplay', player.src)
+                // log('canplay src', player.src)
             })
         }
 
@@ -166,7 +229,6 @@
             // log(player.play)
             button.dataset.action = 'pause'
             button.innerText = '暂停'
-            log('play', player.src)
         }
 
         var pauseSong = function(button) {
@@ -177,7 +239,25 @@
         }
 
         var nextSong = function() {
-            log("下一首")
+            var player = $('#id-audio-player')[0]
+            var songs = $('song')
+            var h1 = $('#id-h1-song-title').text()
+            var t = h1 + '.mp3'
+            if (h1 != '') {
+                for (var i = 0; i < songs.length; i++) {
+                    var index = 0
+                    if (songs[i].innerText == t) {
+                        var index = i
+                        var index = (index + 1) % songs.length
+                        player.src = 'src/' + songs[index].innerText
+                        player.play()
+                    }
+                }
+            } else {
+                n = (n + 1) % songs.length
+                player.src = 'src/' + songs[n].innerText
+                player.play()
+            }
         }
 
         var bindPlayEvents = function() {
@@ -192,6 +272,7 @@
                 }
                 var action = actions[type]
                 action(button)
+                // log('bindPlayEvents src', $('#id-audio-player')[0].src)
             })
         }
 
@@ -221,6 +302,7 @@
 
         $(document).ready(function() {
             __main()
+            geci()
         })
     </script>
     <body>
@@ -238,6 +320,9 @@
                 <time id="id-time-duration" class=right>2:31</time>
             </div>
             <h1 id="id-h1-song-title"></h1>
+            <div class="lrc">
+                <div id="id-div-content"></div>
+            </div>
             <div class="player-play center">
                 <button type="button" data-action=prev>上一首</button>
                 <button type="button" id="id-button-play" data-action=play>播放</button>
@@ -262,5 +347,48 @@
                 </li>
             </ul>
         </div>
+        <textarea id="id-textarea-lrc">
+            [00:04.00]歌名：逍遥叹
+            [00:08.00]演唱：胡歌
+            [00:20.52]
+            [00:26.19]岁月难得沉默秋风厌倦漂泊
+            [00:33.06]夕阳赖着不走挂在墙头舍不得我
+            [00:39.71]昔日伊人耳边话已和潮声向东流
+            [00:46.48]再回首往事也随枫叶一片片落
+            [00:53.31]爱已走到尽头恨也放弃承诺
+            [00:59.65]命运自认幽默想法太多由不得我
+            [01:06.59]壮志凌云几分愁知己难逢几人留
+            [01:13.20]再回首却闻笑传醉梦中
+            [01:21.14]笑叹词穷古痴今狂终成空
+            [01:27.58]刀钝刃乏恩断义绝梦方破
+            [01:34.15]路荒遗叹饱览足迹没人懂
+            [01:40.72]多年望眼欲穿过红尘滚滚我没看透
+            [01:47.81]自嘲墨尽千情万怨英杰愁
+            [01:54.15]曲终人散发花鬓白红颜殁
+            [02:00.65]烛残未觉与日争辉徒消瘦
+            [02:07.58]当泪干血隐狂涌白雪纷飞都成空
+            [02:12.95]
+            [02:39.98]爱已走到尽头恨也放弃承诺
+            [02:46.60]命运自认幽默想法太多由不得我
+            [02:53.29]壮志凌云几分愁知己难逢几人留
+            [02:59.92]再回首却闻笑传醉梦中
+            [03:07.87]笑叹词穷古痴今狂终成空
+            [03:14.44]刀钝刃乏恩断义绝梦方破
+            [03:21.19]路荒遗叹饱览足迹没人懂
+            [03:27.81]多年望眼欲穿过红尘滚滚我没看透
+            [03:34.60]自嘲墨尽千情万怨英杰愁
+            [03:41.10]曲终人散发花鬓白红颜殁
+            [03:47.78]烛残未觉与日争辉徒消瘦
+            [03:54.47]当泪干血隐狂涌白雪纷飞都成空
+            [04:00.69]笑叹词穷古痴今狂终成空
+            [04:07.71]刀钝刃乏恩断义绝梦方破
+            [04:14.53]路荒遗叹饱览足迹没人懂
+            [04:21.11]多年望眼欲穿过红尘滚滚我没看透
+            [04:27.89]自嘲墨尽千情万怨英杰愁
+            [04:34.44]曲终人散发花鬓白红颜殁
+            [04:41.15]烛残未觉与日争辉徒消瘦
+            [04:47.74]当泪干血隐狂涌白雪纷飞都成空
+            [04:53.35]
+        </textarea>
     </body>
 </html>
