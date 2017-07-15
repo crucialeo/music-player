@@ -57,11 +57,13 @@ var rollLrc = function() {
         var ps = document.getElementById(cur)
         // log('ps', ps)
         if (ps) {
+            // 根据 <p> 的 id 来判断是否为当前歌词，如果是就加上 css
             for (var i = 0; i < p.length; i++) {
                 p[i].classList.remove('red')
             }
             ps.classList.add('red')
             if (p[5+n].id == cur && p[5+n]) {
+                // 播放到某一行，把整个歌词显示区域向上提升一定的像素
                 displayedLrc.style.top = -33 * n + 'px'
                 n ++
             }
