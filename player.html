@@ -20,6 +20,10 @@
             color: #ccc;
             line-height: 20px;
         }
+        #id-div-lrc {
+            position: relative;
+            top: 100px;
+        }
         #id-textarea-lrc {
             display: none;
         }
@@ -177,6 +181,7 @@
                 // log(b)
                 b.dataset.action = 'pause'
                 b.innerText = '暂停'
+                geci()
             })
         }
 
@@ -201,6 +206,11 @@
             $('#id-audio-player').on('ended', function() {
                 log('play mode', playerMode)
                 // 根据播放模式播放下一首
+                if (playerMode == loop) {
+                    for (var i = 0; i < playList.length; i++) {
+                        // playList[i] ==
+                    }
+                }
 
             })
             $('#id-audio-player').on('canplay', function(e) {
@@ -272,7 +282,7 @@
                 }
                 var action = actions[type]
                 action(button)
-                // log('bindPlayEvents src', $('#id-audio-player')[0].src)
+                geci()
             })
         }
 
@@ -302,7 +312,6 @@
 
         $(document).ready(function() {
             __main()
-            geci()
         })
     </script>
     <body>

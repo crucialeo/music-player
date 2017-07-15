@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>MyPlayer</title>
+        <style>
+            /*标题*/
+            .title{
+                background: #ccc;
+            }
+            h1 {
+                text-align: center;
+            }
+
+            /*.cover {
+                width:
+            }*/
+
+            /*歌词*/
+            .lyric {
+                width: 300px;
+                height: 400px;
+                overflow: hidden;
+                text-align: center;
+                font-size: 14px;
+                margin: 20px auto;
+                color: #ccc;
+                line-height: 20px;
+            }
+            .red {
+                color: red;
+                font-size: 16px;
+            }
+            #id-div-lrc {
+                position: relative;
+                top: 0;
+            }
+
+            /*播放列表*/
+            .play-list {
+                float: right;
+                position: absolute;
+                top: 250px;
+                right: 0;
+            }
+
+            /*进度条*/
+            #id-input-slider {
+                width: 50%;
+                display: block;
+                margin: 0 auto;
+            }
+            #id-time-current {
+                display: inline;
+                position: relative;
+                top: -20px;
+                left: 20%;
+            }
+            #id-time-duration {
+                display: inline;
+                position: relative;
+                top: -20px;
+                left: 71%;
+            }
+
+            /*控制按钮*/
+            .player-button {
+                text-align: center;
+            }
+            .mode-button {
+                position: relative;
+                top: -23px;
+                left: 69%;
+            }
+            .lrc-box {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- 标题，歌手 -->
+            <div class="title">
+                <h1>Are You OK</h1>
+            </div>
+            <!-- 封面 -->
+            <!-- <div class="cover">
+                <img src="" alt="">
+            </div> -->
+            <!-- 歌词 -->
+            <div class="lyric">
+                <div id="id-div-lrc"></div>
+            </div>
+            <!-- 播放列表 -->
+            <div class="play-list">
+                <li>
+                    <song>Are You OK</song>
+                </li>
+                <li>
+                    <song>逍遥叹</song>
+                </li>
+                <li>
+                    <song>Angelica</song>
+                </li>
+                <li>
+                    <song>The Pirate That Should Not Be.mp3</song>
+                </li>
+                <li>
+                    <song>Pull up a Chair</song>
+                </li>
+                <li>
+                    <song>勇往直前</song>
+                </li>
+            </div>
+            <!-- 控制区 -->
+            <div class="player-controls">
+                <div class="uijmhetc">
+                    <div class="player-slider">
+                        <input id="id-input-slider"type="range" value="0" min="0" max="100">
+                    </div>
+                    <div class="player-time">
+                        <time id="id-time-current">0:00</time>
+                        <time id="id-time-duration">2:31</time>
+                    </div>
+                </div>
+                <div class="player-button">
+                    <button type="button" id="id-button-prev">上一首</button>
+                    <button type="button" id="id-button-play" data-action=play>播放</button>
+                    <button type="button" id="id-button-next">下一首</button>
+                </div>
+                <div class="mode-button">
+                    <button type="button" data-action=single>单曲</button>
+                    <button type="button" data-action=loop>循环</button>
+                    <button type="button" data-action=random>随机</button>
+                </div>
+                <audio id="id-audio-player" controls="controls" data-playing="0">
+                    <source src="src/Are You OK.mp3">
+                    <source src="src/逍遥叹.mp3">
+                    <source src="src/Angelica.mp3">
+                    <source src="src/The Pirate That Should Not Be.mp3">
+                    <source src="src/Pull up a Chair.mp3">
+                    <source src="src/勇往直前.mp3">
+                </audio>
+            </div>
+        </div>
+        <!-- 存放歌词区域 -->
+        <div class="lrc-box">
+            <textarea id="id-textarea-lrc-0">
+                [00:02.150]Thank you!
+                [00:03.670]Are you OK?
+                [00:05.530]Hello!
+                [00:06.430]Thank you!
+                [00:07.180]Thank you very much!
+                [00:09.160]Hello!
+                [00:10.140]Thank you! Thank you very much!
+                [00:13.160]He He Hello!
+                [00:14.100]Thank you! Thank you very much!
+                [00:16.800]He He He Hello!
+                [00:17.780]Thank you!
+                [00:18.640]Thank you very much!
+                [00:20.590]How are you Indian Mi fans?
+                [00:22.600]Do you like Mi 4i?
+                [00:24.600]OK Indian Mi fans
+                [00:26.320]Do you like Mi band?
+                [00:28.400]We will give everyone
+                [00:30.260]a free Mi band
+                [00:32.200]and me
+                [00:34.100]Mi fans!
+                [00:35.080]Do you like?
+                [00:36.390]I'm very happy to
+                [00:37.890]to be a(an) Indian
+                [00:39.890]I'm very happy to
+                [00:41.540]to be a gift
+                [00:43.660]I'm a free gift
+                [00:45.780]for every-everyone
+                [00:47.650]Do you like me?
+                [00:49.380]Yeeeeeeeh! Thank you very much!
+                [00:51.360]Oh Indian Mi fans
+                [00:52.430]Are you OK?
+                [00:53.200]Are you OK?
+                [00:54.220]Yeeeeeeeh!
+                [00:55.290]Oh everyone Are you OK? Are you OK?
+                [00:58.180]I I I I I I I I I I I I I I I mean
+                [00:59.920]Are you OK?
+                [01:01.050]Are you OK? I'm very OK!
+                [01:05.700]Oh Indian Mi fans
+                [01:07.820]Are you OK?
+                [01:08.520]Are you OK?
+                [01:10.360]Oh China(Chinese) Mi Fans
+                [01:11.710]Are you OK?
+                [01:12.710]Are you OK?
+                [01:13.120]I I I I I I I I I
+                [01:14.230]I I I I I I mean
+                [01:15.560]How are you?
+                [01:16.250]I'm fine thank you!
+                [01:21.040]Are you OK?
+                [01:22.160]Are you OK?
+                [01:23.280]We will give everyone a band
+                [01:26.110]Are you OK? We will give a band to everyone
+                [01:29.840]Are you OK?
+                [01:30.780]We will give a colour(ful) strap
+                [01:33.980]All for free!
+                [01:34.920]I'm very happy
+                [01:36.440]ha happy!
+                [01:37.370]Oh Indian Mi fans
+                [01:38.470]Are you OK?
+                [01:39.120]Are you OK?
+                [01:40.220]Yeeeeeeeh!
+                [01:41.360]Oh everyone
+                [01:42.060]Are you OK? Are you OK?
+                [01:44.130]I I I I I I I I I
+                [01:45.230]I I I I I I mean
+                [01:46.180]Are you OK? Are you OK?
+                [01:47.850]I'm very OK!
+                [01:51.270]Once again!
+                [01:52.770]Oh Indian Mi fans
+                [01:53.700]Are you OK?
+                [01:54.600]Are you OK?
+                [01:56.310]Oh China(Chinese) Mi Fans
+                [01:57.720]Are you OK?
+                [01:58.580]Are you OK?
+                [01:59.510]I I I I I I I I I
+                [02:00.430]I I I I I I mean
+                [02:01.300]How are you?
+                [02:03.390]I'm fine thank you!
+                [02:07.070]Are you OK?
+            </textarea>
+            <textarea id="id-textarea-lrc-1">
+                [00:04.00]歌名：逍遥叹
+                [00:08.00]演唱：胡歌
+                [00:20.52]
+                [00:26.19]岁月难得沉默秋风厌倦漂泊
+                [00:33.06]夕阳赖着不走挂在墙头舍不得我
+                [00:39.71]昔日伊人耳边话已和潮声向东流
+                [00:46.48]再回首往事也随枫叶一片片落
+                [00:53.31]爱已走到尽头恨也放弃承诺
+                [00:59.65]命运自认幽默想法太多由不得我
+                [01:06.59]壮志凌云几分愁知己难逢几人留
+                [01:13.20]再回首却闻笑传醉梦中
+                [01:21.14]笑叹词穷古痴今狂终成空
+                [01:27.58]刀钝刃乏恩断义绝梦方破
+                [01:34.15]路荒遗叹饱览足迹没人懂
+                [01:40.72]多年望眼欲穿过红尘滚滚我没看透
+                [01:47.81]自嘲墨尽千情万怨已皆愁
+                [01:54.15]曲终人散发花鬓白红颜殁
+                [02:00.65]烛残未觉与日争辉徒消瘦
+                [02:07.58]当泪干血隐狂涌白雪纷飞都成空
+                [02:12.95]
+                [02:39.98]爱已走到尽头恨也放弃承诺
+                [02:46.60]命运自认幽默想法太多由不得我
+                [02:53.29]壮志凌云几分愁知己难逢几人留
+                [02:59.92]再回首却闻笑传醉梦中
+                [03:07.87]笑叹词穷古痴今狂终成空
+                [03:14.44]刀钝刃乏恩断义绝梦方破
+                [03:21.19]路荒遗叹饱览足迹没人懂
+                [03:27.81]多年望眼欲穿过红尘滚滚我没看透
+                [03:34.60]自嘲墨尽千情万怨已皆愁
+                [03:41.10]曲终人散发花鬓白红颜殁
+                [03:47.78]烛残未觉与日争辉徒消瘦
+                [03:54.47]当泪干血隐狂涌白雪纷飞都成空
+                [04:00.69]笑叹词穷古痴今狂终成空
+                [04:07.71]刀钝刃乏恩断义绝梦方破
+                [04:14.53]路荒遗叹饱览足迹没人懂
+                [04:21.11]多年望眼欲穿过红尘滚滚我没看透
+                [04:27.89]自嘲墨尽千情万怨已皆愁
+                [04:34.44]曲终人散发花鬓白红颜殁
+                [04:41.15]烛残未觉与日争辉徒消瘦
+                [04:47.74]当泪干血隐狂涌白雪纷飞都成空
+                [04:53.35]
+            </textarea>
+            <textarea id="id-textarea-lrc-2">
+                [00:01.00]Angelica
+                [00:02.00]Hans Zimmer
+                [00:03.52]纯音乐
+            </textarea>
+            <textarea id="id-textarea-lrc-3">
+                [00:01.00]The Pirate That Should Not Be
+                [00:02.20]
+                [00:03.70]
+                [00:04.00]Hans Zimmer
+                [00:05.10]
+                [00:06.80]
+                [00:07.52]丁三石推荐 非常过瘾的吉他部分 测耳机必备
+            </textarea>
+            <textarea id="id-textarea-lrc-4">
+                [00:01.00]Pull up a Chair
+                [00:02.00]Peter McConnell
+                [00:03.52]炉石传说原声
+            </textarea>
+            <textarea id="id-textarea-lrc-5">
+                [00:01.00]勇往直前
+                [00:02.00]胡伟立
+                [00:03.52]画面感十足的 bgm
+            </textarea>
+        </div>
+    </body>
+    <script src="audio.js"></script>
+</html>
