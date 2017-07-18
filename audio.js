@@ -5,6 +5,9 @@ var appendHtml = (element, html) => element.insertAdjacentHTML('beforeend', html
 
 var player = e('#id-audio-player')
 var displayedLrc = e('#id-div-lrc')
+var timeBar = e('#id-input-slider')
+var nowTime = e('#id-time-current')
+var totalTime = e('#id-time-duration')
 
 
 var songs = [
@@ -17,7 +20,7 @@ var songs = [
 ]
 var numberOfSongs = songs.length
 
-// 标记播放状态，true 表示暂停状态，false 表示播放状态
+// 标记播放状态，true 表示暂停状态，false 表示正在播放
 var onOff = true
 
 // 切换标题
@@ -45,6 +48,7 @@ var insertLrc = function(id) {
         }
     }
     displayedLrc.innerHTML = html
+    displayedLrc.style.top = '0px'
 }
 
 // 歌词滚动
@@ -71,8 +75,70 @@ var rollLrc = function() {
     })
 }
 
+
+
+var formatTime = function(t) {
+    var min = t.split(':')[0]
+    var sec = t.split(':')[1]
+    if (min.length == 1) {
+        var m = '0' + min
+    } else {
+        var m = min
+    }
+    if (sec.length == 1) {
+        var s = '0' + sec
+    } else {
+        var s = sec
+    }
+    var c = `${m}:${s}`
+    return c
+}
+
+var labelFromTime = function(time) {
+    var minutes = Math.floor(time / 60)
+    var seconds = Math.floor(time % 60)
+    var t = `${minutes}:${seconds}`
+    var ft = formatTime(t)
+    return ft
+}
+
+// 给进度条
+// var bindBarEvents = function() {
+//     var value = player.currentTime / player.duration
+//     setTime(value)
+// }
+
+// 绑定时间显示
+var bindTimeDisplay = function() {
+    // 当前时间
+    player.addEventListener('timeupdate', function() {
+        var time = labelFromTime(player.currentTime)
+        nowTime.innerHTML = time
+    })
+
+    // 总时间
+    player.addEventListener('canplay', function() {
+        var z = labelFromTime(player.duration)
+        timeBar.value = 0
+        nowTime.innerHTML = '00:00'
+        totalTime.innerHTML = z
+    })
+}
+
+// 设置进度条随时间变化
+var bindSetTime = function() {
+    player.addEventListener('timeupdate', function() {
+        var v = player.currentTime / player.duration
+        var t = v * 100
+        // log('滑块', v, t, typeof(t))
+        // log(timeBar)
+        timeBar.value = t
+    })
+}
+
 // 给控制按钮绑定事件
 var bindPlayEvents = function() {
+    // 播放按钮
     var playButton = e('#id-button-play')
     playButton.addEventListener('click', function() {
         if (onOff) {
@@ -105,6 +171,7 @@ var bindPlayEvents = function() {
         } else {
             player.play()
             changeTitle()
+            rollLrc()
         }
     })
 
@@ -124,6 +191,7 @@ var bindPlayEvents = function() {
         } else {
             player.play()
             changeTitle()
+            rollLrc()
         }
     })
 }
@@ -131,6 +199,9 @@ var bindPlayEvents = function() {
 var bindEvents = function() {
     insertLrc('#id-textarea-lrc-0')
     bindPlayEvents()
+    // bindBarEvents()
+    bindTimeDisplay()
+    bindSetTime()
 }
 
 var __main = function() {
