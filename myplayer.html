@@ -2,6 +2,17 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <!-- Loading Bootstrap -->
+        <!-- <link href="dist/css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
+
+        <!-- Loading Flat UI -->
+        <!-- <link href="dist/css/flat-ui.css" rel="stylesheet">
+        <link href="docs/assets/css/demo.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="img/favicon.ico"> -->
+
+        <!-- <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+        <script src="RangeSlider.js"></script> -->
         <title>MyPlayer</title>
         <style>
             /*标题*/
@@ -19,7 +30,7 @@
             /*歌词*/
             .lyric {
                 width: 300px;
-                height: 400px;
+                height: 410px;
                 overflow: hidden;
                 text-align: center;
                 font-size: 14px;
@@ -46,10 +57,31 @@
 
             /*进度条*/
             #id-input-slider {
+                -webkit-appearance: none;
                 width: 50%;
                 display: block;
                 margin: 0 auto;
+                height: 8px;
+                border: solid 2px #3498DB;
+                border-radius: 10px;
+                background: -webkit-linear-gradient(#059CFA, #059CFA) no-repeat;
+                background-size: 0% 100%;
             }
+            #id-input-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                height: 20px;
+                width: 20px;
+                margin-top: -3px; /*使滑块超出轨道部分的偏移量相等*/
+                background: #ffffff;
+                border-radius: 50%; /*外观设置为圆形*/
+                border: solid 0.125em rgba(205, 224, 230, 0.5); /*设置边框*/
+                box-shadow: 0 .125em .125em #3b4547;
+                cursor: pointer;
+            }
+            #id-input-slider:focus {
+                outline: none;
+            }
+            /*时间显示*/
             #id-time-current {
                 display: inline;
                 position: relative;
@@ -74,6 +106,14 @@
             }
             .lrc-box {
                 display: none;
+            }
+
+            /*播放列表*/
+            .btn-group {
+                position: relative;
+                top: -56px;
+                left: 192px;
+                cursor: pointer;
             }
         </style>
     </head>
@@ -114,13 +154,24 @@
             </div>
             <!-- 控制区 -->
             <div class="player-controls">
-                <div class="uijmhetc">
+                <div class="processbar">
                     <div class="player-slider">
-                        <input id="id-input-slider"type="range" value="0" min="0" max="100">
+                        <input id="id-input-slider" type="range" value="0" min="0" max="100">
+                        <!-- <span id="id-span-timebar" class="ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min" style="width: 47%;"></span> -->
+                        <!-- <div id="id-input-slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false">
+                            <div class="ui-slider-segment" style="margin-left: 40%;"></div>
+                            <div class="ui-slider-segment" style="margin-left: 40%;"></div>
+                            <div class="ui-slider-segment"></div>
+                            <div class="ui-slider-segment"></div>
+                            <div class="ui-slider-segment"></div>
+                            <div id="id-div-timebar" class="ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min" style="width: 0%;"></div>
+                            <div id="id-div-playedbar" class="ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min" style="width: 0%;"></div>
+                            <a id="id-a-point" class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 0%;"></a>
+                        </div> -->
                     </div>
                     <div class="player-time">
-                        <time id="id-time-current">0:00</time>
-                        <time id="id-time-duration">2:31</time>
+                        <time id="id-time-current">00:00</time>
+                        <time id="id-time-duration">02:31</time>
                     </div>
                 </div>
                 <div class="player-button">
@@ -128,6 +179,30 @@
                     <button type="button" id="id-button-play" data-action=play>播放</button>
                     <button type="button" id="id-button-next">下一首</button>
                 </div>
+                <!-- <span class="button-dropdown button-dropdown-action" data-buttons="dropdown">
+                    <button class="button button-action is-active">
+                        Select Me <i class="fa fa-caret-up"></i>
+                    </button>
+
+                    <ul class="button-dropdown-list is-above" style="display: block;">
+                        <li><a href="http://www.bootcss.com/">Option Link 1</a></li>
+                        <li><a href="http://www.bootcss.com/">Option Link 2</a></li>
+                        <li class="button-dropdown-divider">
+                            <a href="#">Option Link 3</a>
+                        </li>
+                    </ul>
+                </span>
+                <div class="btn-group open">
+                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button">
+                        <span id="id-span-list" class="fui-list-columned"></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul role="menu" class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                    </ul>
+                </div> -->
                 <div class="mode-button">
                     <button type="button" data-action=single>单曲</button>
                     <button type="button" data-action=loop>循环</button>
@@ -282,7 +357,7 @@
                 [00:02.20]
                 [00:04.00]Hans Zimmer
                 [00:05.10]
-                [00:07.52]丁三石推荐 非常过瘾的吉他部分 测耳机必备
+                [00:07.52]丁三石推荐 吉他部分非常过瘾 测耳机必备
                 [03:56.35]
             </textarea>
             <textarea id="id-textarea-lrc-4">
@@ -304,4 +379,8 @@
         </div>
     </body>
     <script src="audio.js"></script>
+    <!-- <script src="dist/js/vendor/jquery.min.js"></script>
+    <script src="dist/js/vendor/video.js"></script>
+    <script src="dist/js/flat-ui.min.js"></script>
+    <script src="docs/assets/js/application.js"></script> -->
 </html>

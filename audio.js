@@ -53,11 +53,13 @@ var insertLrc = function(id) {
 
 // 歌词滚动
 var rollLrc = function() {
+    // 选出所有歌词
     var p = es('p')
     // log('p', p, p.length, p[12], typeof(p[12]))
     var n = 0
     player.addEventListener('timeupdate', function() {
         var cur = parseInt(player.currentTime)
+        // 选出 id 匹配的歌词
         var ps = document.getElementById(cur)
         // log('ps', ps)
         if (ps) {
@@ -75,8 +77,32 @@ var rollLrc = function() {
     })
 }
 
+var rollLrcByDrag = function() {
+    timeBar.addEventListener('change', function(e) {
+        var value = e.target.value
+        var time = player.duration * value / 100
+        var s = parseInt(time)
+        var ps = document.getElementById(s)
+        var p = es('p')
+        if (p.length > 10) {
+            if (ps) {
+                for (var i = 0; i < p.length; i++) {
+                    if (p[i].id == ps.id) {
+                        var index = i
+                        log('p 存在的时候*******drag index', index, p[i].id, ps.id)
+                        displayedLrc.style.top = -33 * index + 'px'
+                    }
+                }
+            } else {
+                log('p 不存在的时候*****value', value, typeof value)
+                var h = displayedLrc.clientHeight * Number(value) / 100
+                displayedLrc.style.top = - h + 'px'
+            }
+        }
+    })
+}
 
-
+// 时间显示成 00:00 的格式
 var formatTime = function(t) {
     var min = t.split(':')[0]
     var sec = t.split(':')[1]
@@ -94,6 +120,7 @@ var formatTime = function(t) {
     return c
 }
 
+// 把原始的毫秒时间转化格式
 var labelFromTime = function(time) {
     var minutes = Math.floor(time / 60)
     var seconds = Math.floor(time % 60)
@@ -102,11 +129,21 @@ var labelFromTime = function(time) {
     return ft
 }
 
-// 给进度条
-// var bindBarEvents = function() {
-//     var value = player.currentTime / player.duration
-//     setTime(value)
-// }
+// 设置进度条颜色填充
+var bindDrag = function() {
+    timeBar.addEventListener('change', function(e){
+        var value = e.target.value
+        // log('value change', typeof value, value)
+        var time = player.duration * value / 100
+        player.currentTime = time
+        timeBar.style.backgroundSize = `${value}% 100%`
+    })
+    player.addEventListener('timeupdate', function() {
+        var v = player.currentTime / player.duration
+        var played = v * 100
+        timeBar.style.backgroundSize = `${played}% 100%`
+    })
+}
 
 // 绑定时间显示
 var bindTimeDisplay = function() {
@@ -202,6 +239,8 @@ var bindEvents = function() {
     // bindBarEvents()
     bindTimeDisplay()
     bindSetTime()
+    bindDrag()
+    rollLrcByDrag()
 }
 
 var __main = function() {
