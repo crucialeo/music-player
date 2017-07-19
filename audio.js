@@ -55,10 +55,11 @@ var insertLrc = function(id) {
 var rollLrc = function() {
     // 选出所有歌词
     var p = es('p')
-    // log('p', p, p.length, p[12], typeof(p[12]))
+    // 标记当前播放到的歌词所在行数
     var n = 0
     player.addEventListener('timeupdate', function() {
         var cur = parseInt(player.currentTime)
+        var jumpedindex = displayedLrc.dataset.jumpedindex
         // 选出 id 匹配的歌词
         var ps = document.getElementById(cur)
         // log('ps', ps)
@@ -68,15 +69,23 @@ var rollLrc = function() {
                 p[i].classList.remove('red')
             }
             ps.classList.add('red')
-            if (p[5+n].id == cur && p[5+n]) {
-                // 播放到某一行，把整个歌词显示区域向上提升一定的像素
-                displayedLrc.style.top = -33 * n + 'px'
-                n ++
+            if (jumpedindex == "") {
+                log('情况1 jumpedindex[',jumpedindex,']')
+                if (p[5+n].id == cur && p[5+n]) {
+                    // 播放到某一行，把整个歌词显示区域向上提升一定的像素
+                    displayedLrc.style.top = -33 * n + 'px'
+                    n ++
+                }
+            } else if (jumpedindex != "" && jumpedindex != undefined) {
+                log('情况2 jumpedindex[',jumpedindex,']')
+            } else {
+                log('情况3 jumpedindex[',jumpedindex,']')
             }
         }
     })
 }
 
+// 拖动滑块时歌词也会显示到中间
 var rollLrcByDrag = function() {
     timeBar.addEventListener('change', function(e) {
         var value = e.target.value
@@ -99,7 +108,30 @@ var rollLrcByDrag = function() {
                 displayedLrc.style.top = - h + 'px'
             }
         }
+        // 这个 index 有可能是 undefined，要注意一下
+        log('拖动后跳转到的 index', index)
+        displayedLrc.dataset.jumpedindex = index
     })
+    // player.addEventListener('timeupdate', function(index) {
+    //     // log('ouside index', index)
+    //     var jump_cur = displayedLrc.dataset.jumpedindex
+    //     var cur = parseInt(player.currentTime)
+    //     var p = es('p')
+    //     var n = 0
+    //     log('jump_cur', jump_cur)
+    //     if (jump_cur != undefined) {
+    //         // var a = Number(jump_cur)
+    //         var a = 3 + Number(jump_cur)
+    //         log('当前下标的 p 后数3个的 p', a, p[a])
+    //         // if (p[3+jump_cur].id == cur && p[3+jump_cur]) {
+    //         //     // 播放到某一行，把整个歌词显示区域向上提升一定的像素
+    //         //     displayedLrc.style.top = -33 * n + 'px'
+    //         //     n ++
+    //         // }
+    //     } else {
+    //         log('index undefined, jump_cur undefined, p undefined')
+    //     }
+    // })
 }
 
 // 时间显示成 00:00 的格式
@@ -162,7 +194,7 @@ var bindTimeDisplay = function() {
     })
 }
 
-// 设置进度条随时间变化
+// 设置进度条滑块随时间向右移动
 var bindSetTime = function() {
     player.addEventListener('timeupdate', function() {
         var v = player.currentTime / player.duration
@@ -236,11 +268,11 @@ var bindPlayEvents = function() {
 var bindEvents = function() {
     insertLrc('#id-textarea-lrc-0')
     bindPlayEvents()
-    // bindBarEvents()
     bindTimeDisplay()
     bindSetTime()
     bindDrag()
     rollLrcByDrag()
+    // log('没有拖动过的时候的 dataset.jumpedindex*',displayedLrc.dataset.jumpedindex,'*')
 }
 
 var __main = function() {
