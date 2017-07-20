@@ -57,12 +57,16 @@ var rollLrc = function() {
     var p = es('p')
     // 标记当前播放到的歌词所在行数
     var n = 0
+    var m = 0
     player.addEventListener('timeupdate', function() {
         var cur = parseInt(player.currentTime)
-        var jumpedindex = displayedLrc.dataset.jumpedindex
+        var jumpedindex = displayedLrc.getAttribute('data-jumpedindex')
         // 选出 id 匹配的歌词
         var ps = document.getElementById(cur)
         // log('ps', ps)
+        var nowh = displayedLrc.dataset.curheight
+        var nowHeight = Number(nowh.split('p')[0])
+        // log('nowHeight', nowHeight)
         if (ps) {
             // 根据 <p> 的 id 来判断是否为当前歌词，如果是就加上 css
             for (var i = 0; i < p.length; i++) {
@@ -70,17 +74,37 @@ var rollLrc = function() {
             }
             ps.classList.add('red')
             if (jumpedindex == "") {
-                log('情况1 jumpedindex[',jumpedindex,']')
+                // log('情况1 没有拖动滑块 jumpedindex[',jumpedindex,']')
                 if (p[5+n].id == cur && p[5+n]) {
                     // 播放到某一行，把整个歌词显示区域向上提升一定的像素
                     displayedLrc.style.top = -33 * n + 'px'
                     n ++
                 }
-            } else if (jumpedindex != "" && jumpedindex != undefined) {
-                log('情况2 jumpedindex[',jumpedindex,']')
             } else {
-                log('情况3 jumpedindex[',jumpedindex,']')
+                var offset = - 1.2 * m
+                var h = nowHeight + offset
+                // log(h, h+'px', typeof(h+'px'))
+                displayedLrc.style.top = h + 'px'
+                m ++
             }
+            //     log('情况3 拖动滑块到了一个 undefined 的位置 jumpedindex[',jumpedindex,']')
+            // } else {
+            //     log('情况2 拖动滑块到了一个存在的位置 jumpedindex[',jumpedindex,']')
+                // var j = Number(jumpedindex)
+                // var offset = - 9 * m
+                // var h = nowHeight + offset
+                // log(h, h+'px', typeof(h+'px'))
+                // displayedLrc.style.top = h + 'px'
+                // m ++
+                // log('p_id', p[3+j].id)
+                // if (p[3+j].id == cur && p[5+j]) {
+                //     var m = 0
+                //     var offset = - 33 * m
+                //     var h = nowHeight + offset
+                //     log(h, h+'px', typeof(h+'px'))
+                //     displayedLrc.style.top = h + 'px'
+                //     m ++
+                // }
         }
     })
 }
@@ -109,8 +133,10 @@ var rollLrcByDrag = function() {
             }
         }
         // 这个 index 有可能是 undefined，要注意一下
-        log('拖动后跳转到的 index', index)
+        log('拖动后跳转到的 index', index, typeof index)
+        log('拖动后当前高度', displayedLrc.style.top)
         displayedLrc.dataset.jumpedindex = index
+        displayedLrc.dataset.curheight = displayedLrc.style.top
     })
     // player.addEventListener('timeupdate', function(index) {
     //     // log('ouside index', index)
@@ -272,7 +298,6 @@ var bindEvents = function() {
     bindSetTime()
     bindDrag()
     rollLrcByDrag()
-    // log('没有拖动过的时候的 dataset.jumpedindex*',displayedLrc.dataset.jumpedindex,'*')
 }
 
 var __main = function() {
