@@ -13,6 +13,7 @@
 
         <!-- <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
         <script src="RangeSlider.js"></script> -->
+
         <title>MyPlayer</title>
         <style>
             /*标题*/
@@ -48,12 +49,28 @@
             }
 
             /*播放列表*/
-            .play-list {
-                float: right;
+            .play-list:hover .list-container {
+                display: block;
                 position: absolute;
-                top: 250px;
-                right: 0;
+                bottom: 100%;
             }
+            .list-container {
+                display: none;
+                list-style-type: none;
+                width: 250px;
+                line-height: 30px;
+                /*font-size: 14px;*/
+            }
+            .play-list {
+                position: relative;
+                width: 100px;
+                cursor: pointer;
+            }
+            .play-list:hover, li:hover {
+                background: #09F;
+                transition: background 0.5s;
+            }
+
 
             /*进度条*/
             #id-input-slider {
@@ -108,13 +125,14 @@
                 display: none;
             }
 
-            /*播放列表*/
-            .btn-group {
+            /*bootstrap 的东西*/
+            /*.btn-group {
                 position: relative;
                 top: -56px;
                 left: 192px;
                 cursor: pointer;
-            }
+            }*/
+
         </style>
     </head>
     <body>
@@ -133,24 +151,27 @@
             </div>
             <!-- 播放列表 -->
             <div class="play-list">
-                <li>
-                    <song>Are You OK</song>
-                </li>
-                <li>
-                    <song>逍遥叹</song>
-                </li>
-                <li>
-                    <song>Angelica</song>
-                </li>
-                <li>
-                    <song>The Pirate That Should Not Be.mp3</song>
-                </li>
-                <li>
-                    <song>Pull up a Chair</song>
-                </li>
-                <li>
-                    <song>勇往直前</song>
-                </li>
+                <p>list</p>
+                <div class="list-container">
+                    <li>
+                        <song>Are You OK</song>
+                    </li>
+                    <li>
+                        <song>逍遥叹</song>
+                    </li>
+                    <li>
+                        <song>Angelica</song>
+                    </li>
+                    <li>
+                        <song>The Pirate That Should Not Be</song>
+                    </li>
+                    <li>
+                        <song>Pull up a Chair</song>
+                    </li>
+                    <li>
+                        <song>勇往直前</song>
+                    </li>
+                </div>
             </div>
             <!-- 控制区 -->
             <div class="player-controls">
@@ -299,7 +320,14 @@
                 [02:01.300]How are you?
                 [02:03.390]I'm fine thank you!
                 [02:07.070]Are you OK?
+                [02:08.070]
+                [02:09.070]
+                [02:10.070]
+                [02:11.070]
+                [02:12.070]
                 [02:13.070]
+                [02:14.070]
+                [02:15.070]
             </textarea>
             <textarea id="id-textarea-lrc-1">
                 [00:04.00]歌名：逍遥叹

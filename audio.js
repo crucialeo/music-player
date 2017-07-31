@@ -8,6 +8,9 @@ var displayedLrc = e('#id-div-lrc')
 var timeBar = e('#id-input-slider')
 var nowTime = e('#id-time-current')
 var totalTime = e('#id-time-duration')
+var listCtn = e('.list-container')
+var h1 = e('h1')
+var playButton = e('#id-button-play')
 
 
 var songs = [
@@ -20,6 +23,8 @@ var songs = [
 ]
 var numberOfSongs = songs.length
 
+
+
 // 标记播放状态，true 表示暂停状态，false 表示正在播放
 var onOff = true
 
@@ -28,7 +33,6 @@ var changeTitle = function() {
     var playingId = parseInt(player.dataset.playing)
     var srcName = songs[playingId]
     var songName = srcName.split('.')[0]
-    var h1 = e('h1')
     h1.innerHTML = songName
 }
 
@@ -58,12 +62,16 @@ var rollLrc = function() {
     // 标记当前播放到的歌词所在行数
     var n = 0
     var m = 0
+
     player.addEventListener('timeupdate', function() {
         var cur = parseInt(player.currentTime)
-        var jumpedindex = displayedLrc.getAttribute('data-jumpedindex')
         // 选出 id 匹配的歌词
         var ps = document.getElementById(cur)
         // log('ps', ps)
+
+        var jumpedindex = displayedLrc.getAttribute('data-jumpedindex')
+        var j = Number(jumpedindex)
+
         var nowh = displayedLrc.dataset.curheight
         var nowHeight = Number(nowh.split('p')[0])
         // log('nowHeight', nowHeight)
@@ -74,37 +82,20 @@ var rollLrc = function() {
             }
             ps.classList.add('red')
             if (jumpedindex == "") {
-                // log('情况1 没有拖动滑块 jumpedindex[',jumpedindex,']')
+                log('没有拖动滑块')
                 if (p[5+n].id == cur && p[5+n]) {
                     // 播放到某一行，把整个歌词显示区域向上提升一定的像素
                     displayedLrc.style.top = -33 * n + 'px'
                     n ++
                 }
             } else {
-                var offset = - 1.2 * m
-                var h = nowHeight + offset
+                log('存在对应那个id的index')
+                var offset = - 2 * m
+                var h = nowHeight + 30 + offset
                 // log(h, h+'px', typeof(h+'px'))
                 displayedLrc.style.top = h + 'px'
                 m ++
             }
-            //     log('情况3 拖动滑块到了一个 undefined 的位置 jumpedindex[',jumpedindex,']')
-            // } else {
-            //     log('情况2 拖动滑块到了一个存在的位置 jumpedindex[',jumpedindex,']')
-                // var j = Number(jumpedindex)
-                // var offset = - 9 * m
-                // var h = nowHeight + offset
-                // log(h, h+'px', typeof(h+'px'))
-                // displayedLrc.style.top = h + 'px'
-                // m ++
-                // log('p_id', p[3+j].id)
-                // if (p[3+j].id == cur && p[5+j]) {
-                //     var m = 0
-                //     var offset = - 33 * m
-                //     var h = nowHeight + offset
-                //     log(h, h+'px', typeof(h+'px'))
-                //     displayedLrc.style.top = h + 'px'
-                //     m ++
-                // }
         }
     })
 }
@@ -158,6 +149,13 @@ var rollLrcByDrag = function() {
     //         log('index undefined, jump_cur undefined, p undefined')
     //     }
     // })
+}
+
+// 初始化歌词位置
+var initPos = function() {
+    displayedLrc.style.top = '0px'
+    displayedLrc.dataset.jumpedindex = ''
+    displayedLrc.dataset.curheight = ''
 }
 
 // 时间显示成 00:00 的格式
@@ -234,7 +232,6 @@ var bindSetTime = function() {
 // 给控制按钮绑定事件
 var bindPlayEvents = function() {
     // 播放按钮
-    var playButton = e('#id-button-play')
     playButton.addEventListener('click', function() {
         if (onOff) {
             player.play()
@@ -263,9 +260,11 @@ var bindPlayEvents = function() {
         if (onOff) {
             log('现在是暂停状态时候的下一首')
             changeTitle()
+            timeBar.style.backgroundSize = `0% 100%`
         } else {
             player.play()
             changeTitle()
+            initPos()
             rollLrc()
         }
     })
@@ -283,11 +282,114 @@ var bindPlayEvents = function() {
         if (onOff) {
             log('现在是暂停状态时候的上一首')
             changeTitle()
+            timeBar.style.backgroundSize = `0% 100%`
         } else {
             player.play()
             changeTitle()
+            initPos()
             rollLrc()
         }
+    })
+}
+
+// 点击播放列表切换歌曲
+var bindSwitch = function() {
+    listCtn.addEventListener('click', function(e) {
+        var name = e.target.innerText
+        var folder = 'src/'
+        player.src = folder + name + '.mp3'
+        // 设置标题
+        h1.innerHTML = name
+        // 设置歌词
+        var l = name + '.mp3'
+        for (var i = 0; i < songs.length; i++) {
+            if (songs[i] == l) {
+                var index = i
+                var lrcId = '#id-textarea-lrc-' + String(index)
+                insertLrc(lrcId)
+            }
+        }
+        initPos()
+        rollLrc()
+        // 点击列表就会播放
+        player.play()
+        // 设置播放按钮
+        playButton.innerHTML = '暂停'
+        // 标记播放状态
+        onOff = false
+        // 标记当前正在播放的歌曲id
+        player.dataset.playing = index
+        // 设置进度条填充归零
+        timeBar.style.backgroundSize = `0% 100%`
+    })
+}
+
+
+
+var loopPlay = function() {
+    log('loopPlay')
+    player.addEventListener('ended', function() {
+        var playingId = parseInt(player.dataset.playing)
+        var i = (playingId + 1) % numberOfSongs
+        player.dataset.playing = i
+        var newSrc = songs[i]
+        player.src = 'src/' + newSrc
+        var lrcId = '#id-textarea-lrc-' + String(i)
+        insertLrc(lrcId)
+        changeTitle()
+        timeBar.style.backgroundSize = `0% 100%`
+        player.play()
+        initPos()
+        rollLrc()
+    })
+}
+
+var singlePlay = function() {
+    log('singlePlay')
+    player.addEventListener('ended', function() {
+        var curSongId = Number(player.dataset.playing)
+        player.src = 'src/' + songs[curSongId]
+        initPos()
+        rollLrc()
+        player.play()
+    })
+}
+
+var randomPlay = function() {
+    log('randomPlay')
+    player.addEventListener('ended', function() {
+        var n = Math.random() * numberOfSongs
+        var r = Math.floor(n)
+        player.src = 'src/' + songs[r]
+        log('random src', songs[r])
+        player.dataset.playing = r
+        var lrcId = '#id-textarea-lrc-' + String(r)
+        insertLrc(lrcId)
+        changeTitle()
+        timeBar.style.backgroundSize = `0% 100%`
+        player.play()
+        initPos()
+        rollLrc()
+    })
+}
+
+var bindModeEvents = function() {
+    var curMode = 'loop'
+    var mode = {
+        loop: loopPlay,
+        single: singlePlay,
+        random: randomPlay,
+    }
+
+    var modeButtons = e('.mode-button')
+
+    modeButtons.addEventListener('click', function(event) {
+        var action = event.target.dataset.action
+        log('action', action)
+        // log('取对象里的东西', mode[action])
+        var f = mode[action]
+        log('f', f)
+        f()
     })
 }
 
@@ -298,6 +400,9 @@ var bindEvents = function() {
     bindSetTime()
     bindDrag()
     rollLrcByDrag()
+    bindSwitch()
+    bindModeEvents()
+    // randomPlay()
 }
 
 var __main = function() {
