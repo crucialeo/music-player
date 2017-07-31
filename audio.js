@@ -215,6 +215,17 @@ var bindTimeDisplay = function() {
         timeBar.value = 0
         nowTime.innerHTML = '00:00'
         totalTime.innerHTML = z
+
+        changeTitle()
+
+        if (onOff) {
+            // log('现在是暂停状态时候的下一首')
+            timeBar.style.backgroundSize = `0% 100%`
+        } else {
+            player.play()
+            // initPos()
+            // rollLrc()
+        }
     })
 }
 
@@ -257,16 +268,8 @@ var bindPlayEvents = function() {
         player.src = 'src/' + newSrc
         var lrcId = '#id-textarea-lrc-' + String(i)
         insertLrc(lrcId)
-        if (onOff) {
-            log('现在是暂停状态时候的下一首')
-            changeTitle()
-            timeBar.style.backgroundSize = `0% 100%`
-        } else {
-            player.play()
-            changeTitle()
-            initPos()
-            rollLrc()
-        }
+        initPos()
+        rollLrc()
     })
 
     // 上一首按钮
@@ -279,16 +282,18 @@ var bindPlayEvents = function() {
         player.src = 'src/' + newSrc
         var lrcId = '#id-textarea-lrc-' + String(i)
         insertLrc(lrcId)
-        if (onOff) {
-            log('现在是暂停状态时候的上一首')
-            changeTitle()
-            timeBar.style.backgroundSize = `0% 100%`
-        } else {
-            player.play()
-            changeTitle()
-            initPos()
-            rollLrc()
-        }
+        initPos()
+        rollLrc()
+        // if (onOff) {
+        //     log('现在是暂停状态时候的上一首')
+        //     changeTitle()
+        //     timeBar.style.backgroundSize = `0% 100%`
+        // } else {
+        //     player.play()
+        //     changeTitle()
+        //     initPos()
+        //     rollLrc()
+        // }
     })
 }
 
@@ -312,7 +317,7 @@ var bindSwitch = function() {
         initPos()
         rollLrc()
         // 点击列表就会播放
-        player.play()
+        // player.play()
         // 设置播放按钮
         playButton.innerHTML = '暂停'
         // 标记播放状态
@@ -338,7 +343,7 @@ var loopPlay = function() {
         insertLrc(lrcId)
         changeTitle()
         timeBar.style.backgroundSize = `0% 100%`
-        player.play()
+        // player.play()
         initPos()
         rollLrc()
     })
@@ -351,7 +356,7 @@ var singlePlay = function() {
         player.src = 'src/' + songs[curSongId]
         initPos()
         rollLrc()
-        player.play()
+        // player.play()
     })
 }
 
@@ -367,7 +372,7 @@ var randomPlay = function() {
         insertLrc(lrcId)
         changeTitle()
         timeBar.style.backgroundSize = `0% 100%`
-        player.play()
+        // player.play()
         initPos()
         rollLrc()
     })
