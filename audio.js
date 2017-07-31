@@ -23,7 +23,7 @@ var songs = [
 ]
 var numberOfSongs = songs.length
 
-
+var randomMode = false
 
 // 标记播放状态，true 表示暂停状态，false 表示正在播放
 var onOff = true
@@ -261,39 +261,55 @@ var bindPlayEvents = function() {
     // 下一首按钮
     var nextButton = e('#id-button-next')
     nextButton.addEventListener('click', function() {
-        var playingId = parseInt(player.dataset.playing)
-        var i = (playingId + 1) % numberOfSongs
-        player.dataset.playing = i
-        var newSrc = songs[i]
-        player.src = 'src/' + newSrc
-        var lrcId = '#id-textarea-lrc-' + String(i)
-        insertLrc(lrcId)
-        initPos()
-        rollLrc()
+        if (randomMode) {
+            var n = Math.random() * numberOfSongs
+            var r = Math.floor(n)
+            player.src = 'src/' + songs[r]
+            player.dataset.playing = r
+            var lrcId = '#id-textarea-lrc-' + String(r)
+            insertLrc(lrcId)
+            changeTitle()
+            timeBar.style.backgroundSize = `0% 100%`
+            initPos()
+            rollLrc()
+        } else {
+            var playingId = parseInt(player.dataset.playing)
+            var i = (playingId + 1) % numberOfSongs
+            player.dataset.playing = i
+            var newSrc = songs[i]
+            player.src = 'src/' + newSrc
+            var lrcId = '#id-textarea-lrc-' + String(i)
+            insertLrc(lrcId)
+            initPos()
+            rollLrc()
+        }
     })
 
     // 上一首按钮
     var prevButton = e('#id-button-prev')
     prevButton.addEventListener('click', function() {
-        var playingId = parseInt(player.dataset.playing)
-        var i = (playingId - 1 + numberOfSongs) % numberOfSongs
-        player.dataset.playing = i
-        var newSrc = songs[i]
-        player.src = 'src/' + newSrc
-        var lrcId = '#id-textarea-lrc-' + String(i)
-        insertLrc(lrcId)
-        initPos()
-        rollLrc()
-        // if (onOff) {
-        //     log('现在是暂停状态时候的上一首')
-        //     changeTitle()
-        //     timeBar.style.backgroundSize = `0% 100%`
-        // } else {
-        //     player.play()
-        //     changeTitle()
-        //     initPos()
-        //     rollLrc()
-        // }
+        if (randomMode) {
+            var n = Math.random() * numberOfSongs
+            var r = Math.floor(n)
+            player.src = 'src/' + songs[r]
+            player.dataset.playing = r
+            var lrcId = '#id-textarea-lrc-' + String(r)
+            insertLrc(lrcId)
+            changeTitle()
+            timeBar.style.backgroundSize = `0% 100%`
+            initPos()
+            rollLrc()
+        } else {
+            var playingId = parseInt(player.dataset.playing)
+            var i = (playingId - 1 + numberOfSongs) % numberOfSongs
+            player.dataset.playing = i
+            var newSrc = songs[i]
+            player.src = 'src/' + newSrc
+            var lrcId = '#id-textarea-lrc-' + String(i)
+            insertLrc(lrcId)
+            initPos()
+            rollLrc()
+        }
     })
 }
 
@@ -362,6 +378,7 @@ var singlePlay = function() {
 
 var randomPlay = function() {
     log('randomPlay')
+    randomMode = true
     player.addEventListener('ended', function() {
         var n = Math.random() * numberOfSongs
         var r = Math.floor(n)
@@ -379,7 +396,6 @@ var randomPlay = function() {
 }
 
 var bindModeEvents = function() {
-    var curMode = 'loop'
     var mode = {
         loop: loopPlay,
         single: singlePlay,
@@ -391,7 +407,6 @@ var bindModeEvents = function() {
     modeButtons.addEventListener('click', function(event) {
         var action = event.target.dataset.action
         log('action', action)
-        // log('取对象里的东西', mode[action])
         var f = mode[action]
         log('f', f)
         f()
