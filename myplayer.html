@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <!-- Loading Bootstrap -->
         <!-- <link href="dist/css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
 
@@ -17,11 +18,20 @@
         <title>MyPlayer</title>
         <style>
             /*标题*/
-            .title{
+            /*.title{
                 background: #ccc;
-            }
+            }*/
             h1 {
+                color: white;
                 text-align: center;
+                font-weight: normal;
+                font-family: sans-serif;
+            }
+
+            /*背景*/
+            body {
+                background: url(bkg/camera-vintage.jpg) center;
+                background-size: cover;
             }
 
             /*.cover {
@@ -36,12 +46,13 @@
                 text-align: center;
                 font-size: 14px;
                 margin: 20px auto;
-                color: #ccc;
+                color: #a0a0a0;
                 line-height: 20px;
             }
             .red {
-                color: red;
+                color: white;
                 font-size: 16px;
+                /*font-weight: bold;*/
             }
             #id-div-lrc {
                 position: relative;
@@ -59,6 +70,7 @@
                 list-style-type: none;
                 width: 250px;
                 line-height: 30px;
+                color: white;
                 /*font-size: 14px;*/
             }
             .play-list {
@@ -78,16 +90,19 @@
                 width: 50%;
                 display: block;
                 margin: 0 auto;
-                height: 8px;
-                border: solid 2px #3498DB;
+                height: 6px;
+                /*border: solid 2px #3498DB;
                 border-radius: 10px;
-                background: -webkit-linear-gradient(#059CFA, #059CFA) no-repeat;
+                background: -webkit-linear-gradient(#059CFA, #059CFA) no-repeat;*/
                 background-size: 0% 100%;
+                border: solid 1.2px rgb(255, 255, 255);
+                border-radius: 8px;
+                background: -webkit-linear-gradient(#ffffff, #ffffff) no-repeat;
             }
             #id-input-slider::-webkit-slider-thumb {
                 -webkit-appearance: none;
-                height: 20px;
-                width: 20px;
+                height: 12px;
+                width: 12px;
                 margin-top: -3px; /*使滑块超出轨道部分的偏移量相等*/
                 background: #ffffff;
                 border-radius: 50%; /*外观设置为圆形*/
@@ -111,6 +126,9 @@
                 top: -20px;
                 left: 71%;
             }
+            time {
+                color: white;
+            }
 
             /*控制按钮*/
             .player-button {
@@ -122,6 +140,9 @@
                 left: 69%;
             }
             .lrc-box {
+                display: none;
+            }
+            .hidden {
                 display: none;
             }
 
@@ -151,7 +172,8 @@
             </div>
             <!-- 播放列表 -->
             <div class="play-list">
-                <p>list</p>
+                <!-- <p>list</p> -->
+                <img src="icons/列表.png" id="id-img-list">
                 <div class="list-container">
                     <li>
                         <song>Are You OK</song>
@@ -196,9 +218,16 @@
                     </div>
                 </div>
                 <div class="player-button">
-                    <button type="button" id="id-button-prev">上一首</button>
-                    <button type="button" id="id-button-play" data-action=play>播放</button>
-                    <button type="button" id="id-button-next">下一首</button>
+                    <!-- <button type="button" id="id-button-prev">上一首</button> -->
+                    <!-- <button type="button" id="id-button-play" data-action=play>播放</button> -->
+                    <!-- <button type="button" id="id-button-next">下一首</button> -->
+                    <img src="icons/fast_reverse_icon (1).png" id="id-img-prev">
+                    <div class="play-pause">
+                        <img src="icons/play.png" id="id-img-play">
+                        <img src="icons/pause.png" id="id-img-pause" class="hidden">
+                    </div>
+                    <img src="icons/fast_forward_icon.png" id="id-img-next">
+
                 </div>
                 <!-- <span class="button-dropdown button-dropdown-action" data-buttons="dropdown">
                     <button class="button button-action is-active">
@@ -225,9 +254,12 @@
                     </ul>
                 </div> -->
                 <div class="mode-button">
-                    <button type="button" data-action=single>单曲</button>
+                    <!-- <button type="button" data-action=single>单曲</button>
                     <button type="button" data-action=loop>循环</button>
-                    <button type="button" data-action=random>随机</button>
+                    <button type="button" data-action=random>随机</button> -->
+                    <img src="icons/单曲循环-重做.png" id="id-img-single" data-action=loop>
+                    <img src="icons/循环播放-重做.png" id="id-img-loop" class="hidden" data-action=random>
+                    <img src="icons/随机播放 (2).png" id="id-img-random" class="hidden" data-action=single>
                 </div>
                 <audio id="id-audio-player" controls="controls" data-playing="0">
                     <source src="src/Are You OK.mp3">

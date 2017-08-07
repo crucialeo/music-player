@@ -10,7 +10,10 @@ var nowTime = e('#id-time-current')
 var totalTime = e('#id-time-duration')
 var listCtn = e('.list-container')
 var h1 = e('h1')
-var playButton = e('#id-button-play')
+var playButton = e('#id-img-play')
+var pauseButton = e('#id-img-pause')
+var play_pause = e('.play-pause')
+
 
 
 var songs = [
@@ -215,9 +218,9 @@ var bindTimeDisplay = function() {
         timeBar.value = 0
         nowTime.innerHTML = '00:00'
         totalTime.innerHTML = z
-
+        // 改变标题
         changeTitle()
-
+        // 如果暂停就不放，如果在播放就播放
         if (onOff) {
             // log('现在是暂停状态时候的下一首')
             timeBar.style.backgroundSize = `0% 100%`
@@ -243,23 +246,27 @@ var bindSetTime = function() {
 // 给控制按钮绑定事件
 var bindPlayEvents = function() {
     // 播放按钮
-    playButton.addEventListener('click', function() {
+    play_pause.addEventListener('click', function() {
         if (onOff) {
             player.play()
-            playButton.innerHTML = '暂停'
+            // playButton.innerHTML = '暂停'
+            playButton.classList.add('hidden')
+            pauseButton.classList.remove('hidden')
             changeTitle()
             rollLrc()
             // log('now playing', player.paused)
         } else {
             player.pause()
-            playButton.innerHTML = '播放'
+            // playButton.innerHTML = '播放'
+            pauseButton.classList.add('hidden')
+            playButton.classList.remove('hidden')
             // log('now paused', player.paused)
         }
         onOff = !onOff
     })
 
     // 下一首按钮
-    var nextButton = e('#id-button-next')
+    var nextButton = e('#id-img-next')
     nextButton.addEventListener('click', function() {
         if (randomMode) {
             var n = Math.random() * numberOfSongs
@@ -272,6 +279,7 @@ var bindPlayEvents = function() {
             timeBar.style.backgroundSize = `0% 100%`
             initPos()
             rollLrc()
+            changeBkg(songs[r])
         } else {
             var playingId = parseInt(player.dataset.playing)
             var i = (playingId + 1) % numberOfSongs
@@ -282,11 +290,12 @@ var bindPlayEvents = function() {
             insertLrc(lrcId)
             initPos()
             rollLrc()
+            changeBkg(newSrc)
         }
     })
 
     // 上一首按钮
-    var prevButton = e('#id-button-prev')
+    var prevButton = e('#id-img-prev')
     prevButton.addEventListener('click', function() {
         if (randomMode) {
             var n = Math.random() * numberOfSongs
@@ -299,6 +308,7 @@ var bindPlayEvents = function() {
             timeBar.style.backgroundSize = `0% 100%`
             initPos()
             rollLrc()
+            changeBkg(songs[r])
         } else {
             var playingId = parseInt(player.dataset.playing)
             var i = (playingId - 1 + numberOfSongs) % numberOfSongs
@@ -309,6 +319,7 @@ var bindPlayEvents = function() {
             insertLrc(lrcId)
             initPos()
             rollLrc()
+            changeBkg(newSrc)
         }
     })
 }
@@ -332,8 +343,10 @@ var bindSwitch = function() {
         }
         initPos()
         rollLrc()
-        // 点击列表就会播放
-        // player.play()
+
+        var c = name + '.mp3'
+        changeBkg(c)
+
         // 设置播放按钮
         playButton.innerHTML = '暂停'
         // 标记播放状态
@@ -362,16 +375,19 @@ var loopPlay = function() {
         // player.play()
         initPos()
         rollLrc()
+        changeBkg(newSrc)
     })
 }
 
 var singlePlay = function() {
     log('singlePlay')
     player.addEventListener('ended', function() {
+        log('当前的 id', player.dataset.playing)
         var curSongId = Number(player.dataset.playing)
         player.src = 'src/' + songs[curSongId]
         initPos()
         rollLrc()
+        changeBkg(songs[curSongId])
         // player.play()
     })
 }
@@ -392,6 +408,7 @@ var randomPlay = function() {
         // player.play()
         initPos()
         rollLrc()
+        changeBkg(songs[r])
     })
 }
 
@@ -403,6 +420,11 @@ var bindModeEvents = function() {
     }
 
     var modeButtons = e('.mode-button')
+    var s = e('#id-img-single')
+    var l = e('#id-img-single')
+    var r = e('#id-img-random')
+
+    singlePlay()
 
     modeButtons.addEventListener('click', function(event) {
         var action = event.target.dataset.action
@@ -411,6 +433,20 @@ var bindModeEvents = function() {
         log('f', f)
         f()
     })
+}
+
+var changeBkg = function(name) {
+    var body = document.querySelector('body')
+    var bkgs = {
+        'Are You OK.mp3': 'camera-vintage.jpg',
+        '逍遥叹.mp3': 'titian.jpeg',
+        'Angelica.mp3': 'roof.jpg',
+        'The Pirate That Should Not Be.mp3': 'bread.jpeg',
+        'Pull up a Chair.mp3': 'guazhe.jpg',
+        '勇往直前.mp3': 'car.jpg',
+    }
+    var c = bkgs[name]
+    body.style.background = `url(bkg/${c}) center`
 }
 
 var bindEvents = function() {
@@ -422,7 +458,6 @@ var bindEvents = function() {
     rollLrcByDrag()
     bindSwitch()
     bindModeEvents()
-    // randomPlay()
 }
 
 var __main = function() {
