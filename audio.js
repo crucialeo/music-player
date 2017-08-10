@@ -412,6 +412,31 @@ var randomPlay = function() {
     })
 }
 
+//显示循环按钮，隐藏其他两个
+var class1 = function() {
+    var s = e('#id-img-single')
+    var l = e('#id-img-loop')
+    var r = e('#id-img-random')
+    s.classList.add('hidden')
+    l.classList.remove('hidden')
+}
+//显示随机按钮，隐藏其他两个
+var class2 = function() {
+    var s = e('#id-img-single')
+    var l = e('#id-img-loop')
+    var r = e('#id-img-random')
+    l.classList.add('hidden')
+    r.classList.remove('hidden')
+}
+//显示单曲按钮，隐藏其他两个
+var class3 = function() {
+    var s = e('#id-img-single')
+    var l = e('#id-img-loop')
+    var r = e('#id-img-random')
+    r.classList.add('hidden')
+    s.classList.remove('hidden')
+}
+
 var bindModeEvents = function() {
     var mode = {
         loop: loopPlay,
@@ -421,8 +446,14 @@ var bindModeEvents = function() {
 
     var modeButtons = e('.mode-button')
     var s = e('#id-img-single')
-    var l = e('#id-img-single')
+    var l = e('#id-img-loop')
     var r = e('#id-img-random')
+
+    var toggleClass = {
+        loop: class1,
+        random: class2,
+        single: class3,
+    }
 
     singlePlay()
 
@@ -432,6 +463,8 @@ var bindModeEvents = function() {
         var f = mode[action]
         log('f', f)
         f()
+        var t = toggleClass[action]
+        t()
     })
 }
 
