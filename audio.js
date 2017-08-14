@@ -412,7 +412,7 @@ var randomPlay = function() {
     })
 }
 
-//显示循环按钮，隐藏其他两个
+// 显示循环按钮，隐藏其他两个
 var class1 = function() {
     var s = e('#id-img-single')
     var l = e('#id-img-loop')
@@ -420,7 +420,7 @@ var class1 = function() {
     s.classList.add('hidden')
     l.classList.remove('hidden')
 }
-//显示随机按钮，隐藏其他两个
+// 显示随机按钮，隐藏其他两个
 var class2 = function() {
     var s = e('#id-img-single')
     var l = e('#id-img-loop')
@@ -428,7 +428,7 @@ var class2 = function() {
     l.classList.add('hidden')
     r.classList.remove('hidden')
 }
-//显示单曲按钮，隐藏其他两个
+// 显示单曲按钮，隐藏其他两个
 var class3 = function() {
     var s = e('#id-img-single')
     var l = e('#id-img-loop')
@@ -461,8 +461,9 @@ var bindModeEvents = function() {
         var action = event.target.dataset.action
         log('action', action)
         var f = mode[action]
-        log('f', f)
+        log('当前的模式是', f)
         f()
+        // 切换模式按钮显示
         var t = toggleClass[action]
         t()
     })

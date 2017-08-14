@@ -32,6 +32,8 @@
             body {
                 background: url(bkg/camera-vintage.jpg) center;
                 background-size: cover;
+                /*height: 100%;*/
+                /*display: block;*/
             }
 
             /*.cover {
@@ -71,12 +73,16 @@
                 width: 250px;
                 line-height: 30px;
                 color: white;
+                z-index: 100;
+                cursor: pointer;
                 /*font-size: 14px;*/
             }
             .play-list {
                 position: relative;
-                width: 100px;
+                width: 30px;
                 cursor: pointer;
+                left: 22%;
+                top: 58px;
             }
             .play-list:hover, li:hover {
                 background: #09F;
@@ -117,33 +123,52 @@
             #id-time-current {
                 display: inline;
                 position: relative;
-                top: -20px;
-                left: 20%;
+                top: -16px;
+                left: 288px;
             }
             #id-time-duration {
                 display: inline;
                 position: relative;
-                top: -20px;
-                left: 71%;
+                top: -16px;
+                left: 977px;
             }
             time {
                 color: white;
             }
 
             /*控制按钮*/
+
             .player-button {
-                text-align: center;
+                /*text-align: center;*/
+                position: absolute;
+                left: 50%;
+                cursor: pointer;
             }
             .mode-button {
-                position: relative;
-                top: -23px;
-                left: 69%;
+                top: 86%;
+                left: 76%;
+                position: absolute;
+                cursor: pointer;
             }
             .lrc-box {
                 display: none;
             }
             .hidden {
                 display: none;
+            }
+            #id-img-prev {
+                left: -185%;
+                position: absolute;
+            }
+            .play-pause {
+                position: absolute;
+                top: -5px;
+                left: -55%;
+            }
+            #id-img-next {
+                position: relative;
+                top: 0px;
+                left: 82%;
             }
 
             /*bootstrap 的东西*/
@@ -173,7 +198,7 @@
             <!-- 播放列表 -->
             <div class="play-list">
                 <!-- <p>list</p> -->
-                <img src="icons/列表.png" id="id-img-list">
+                <img src="icons/列表.png" id="id-img-list" width="25">
                 <div class="list-container">
                     <li>
                         <song>Are You OK</song>
@@ -221,47 +246,23 @@
                     <!-- <button type="button" id="id-button-prev">上一首</button> -->
                     <!-- <button type="button" id="id-button-play" data-action=play>播放</button> -->
                     <!-- <button type="button" id="id-button-next">下一首</button> -->
-                    <img src="icons/fast_reverse_icon (1).png" id="id-img-prev">
+                    <img src="icons/fast_reverse_icon (1).png" id="id-img-prev" width="40">
                     <div class="play-pause">
-                        <img src="icons/play.png" id="id-img-play">
-                        <img src="icons/pause.png" id="id-img-pause" class="hidden">
+                        <img src="icons/play.png" id="id-img-play" width="40">
+                        <img src="icons/pause.png" id="id-img-pause" class="hidden" width="39">
                     </div>
-                    <img src="icons/fast_forward_icon.png" id="id-img-next">
+                    <img src="icons/fast_forward_icon.png" id="id-img-next" width="40">
 
                 </div>
-                <!-- <span class="button-dropdown button-dropdown-action" data-buttons="dropdown">
-                    <button class="button button-action is-active">
-                        Select Me <i class="fa fa-caret-up"></i>
-                    </button>
-
-                    <ul class="button-dropdown-list is-above" style="display: block;">
-                        <li><a href="http://www.bootcss.com/">Option Link 1</a></li>
-                        <li><a href="http://www.bootcss.com/">Option Link 2</a></li>
-                        <li class="button-dropdown-divider">
-                            <a href="#">Option Link 3</a>
-                        </li>
-                    </ul>
-                </span>
-                <div class="btn-group open">
-                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button">
-                        <span id="id-span-list" class="fui-list-columned"></span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                    </ul>
-                </div> -->
                 <div class="mode-button">
                     <!-- <button type="button" data-action=single>单曲</button>
                     <button type="button" data-action=loop>循环</button>
                     <button type="button" data-action=random>随机</button> -->
-                    <img src="icons/单曲循环-重做.png" id="id-img-single" data-action=loop>
-                    <img src="icons/循环播放-重做.png" id="id-img-loop" class="hidden" data-action=random>
-                    <img src="icons/随机播放 (2).png" id="id-img-random" class="hidden" data-action=single>
+                    <img src="icons/单曲循环-重做.png" id="id-img-single" data-action=loop width="30">
+                    <img src="icons/循环播放-重做.png" id="id-img-loop" class="hidden" data-action=random width="30">
+                    <img src="icons/随机播放 (2).png" id="id-img-random" class="hidden" data-action=single width="30">
                 </div>
-                <audio id="id-audio-player" controls="controls" data-playing="0">
+                <audio id="id-audio-player" controls="controls" data-playing="0" class="hidden">
                     <source src="src/Are You OK.mp3">
                     <source src="src/逍遥叹.mp3">
                     <source src="src/Angelica.mp3">
