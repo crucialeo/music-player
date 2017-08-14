@@ -15,7 +15,7 @@ var pauseButton = e('#id-img-pause')
 var play_pause = e('.play-pause')
 
 
-
+// 歌曲
 var songs = [
     'Are You OK.mp3',
     '逍遥叹.mp3',
@@ -26,6 +26,7 @@ var songs = [
 ]
 var numberOfSongs = songs.length
 
+// 标记随机播放状态，默认是 false
 var randomMode = false
 
 // 标记播放状态，true 表示暂停状态，false 表示正在播放
@@ -132,26 +133,6 @@ var rollLrcByDrag = function() {
         displayedLrc.dataset.jumpedindex = index
         displayedLrc.dataset.curheight = displayedLrc.style.top
     })
-    // player.addEventListener('timeupdate', function(index) {
-    //     // log('ouside index', index)
-    //     var jump_cur = displayedLrc.dataset.jumpedindex
-    //     var cur = parseInt(player.currentTime)
-    //     var p = es('p')
-    //     var n = 0
-    //     log('jump_cur', jump_cur)
-    //     if (jump_cur != undefined) {
-    //         // var a = Number(jump_cur)
-    //         var a = 3 + Number(jump_cur)
-    //         log('当前下标的 p 后数3个的 p', a, p[a])
-    //         // if (p[3+jump_cur].id == cur && p[3+jump_cur]) {
-    //         //     // 播放到某一行，把整个歌词显示区域向上提升一定的像素
-    //         //     displayedLrc.style.top = -33 * n + 'px'
-    //         //     n ++
-    //         // }
-    //     } else {
-    //         log('index undefined, jump_cur undefined, p undefined')
-    //     }
-    // })
 }
 
 // 初始化歌词位置
@@ -348,7 +329,8 @@ var bindSwitch = function() {
         changeBkg(c)
 
         // 设置播放按钮
-        playButton.innerHTML = '暂停'
+        playButton.classList.add('hidden')
+        pauseButton.classList.remove('hidden')
         // 标记播放状态
         onOff = false
         // 标记当前正在播放的歌曲id
@@ -359,7 +341,7 @@ var bindSwitch = function() {
 }
 
 
-
+// 顺序播放
 var loopPlay = function() {
     log('loopPlay')
     player.addEventListener('ended', function() {
@@ -378,7 +360,7 @@ var loopPlay = function() {
         changeBkg(newSrc)
     })
 }
-
+// 单曲循环
 var singlePlay = function() {
     log('singlePlay')
     player.addEventListener('ended', function() {
@@ -391,7 +373,7 @@ var singlePlay = function() {
         // player.play()
     })
 }
-
+// 随机播放
 var randomPlay = function() {
     log('randomPlay')
     randomMode = true
@@ -436,27 +418,27 @@ var class3 = function() {
     r.classList.add('hidden')
     s.classList.remove('hidden')
 }
-
+// 切换播放模式
 var bindModeEvents = function() {
     var mode = {
         loop: loopPlay,
         single: singlePlay,
         random: randomPlay,
     }
-
+    // 选出模式相关的按钮和标签
     var modeButtons = e('.mode-button')
     var s = e('#id-img-single')
     var l = e('#id-img-loop')
     var r = e('#id-img-random')
-
+    // 模式按钮显示的对象
     var toggleClass = {
         loop: class1,
         random: class2,
         single: class3,
     }
-
+    // 默认单曲循环
     singlePlay()
-
+    // 给模式按钮绑定事件
     modeButtons.addEventListener('click', function(event) {
         var action = event.target.dataset.action
         log('action', action)
@@ -468,7 +450,7 @@ var bindModeEvents = function() {
         t()
     })
 }
-
+// 切换歌曲的同时切换背景
 var changeBkg = function(name) {
     var body = document.querySelector('body')
     var bkgs = {

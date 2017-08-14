@@ -3,24 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <!-- Loading Bootstrap -->
-        <!-- <link href="dist/css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
-
-        <!-- Loading Flat UI -->
-        <!-- <link href="dist/css/flat-ui.css" rel="stylesheet">
-        <link href="docs/assets/css/demo.css" rel="stylesheet">
-
-        <link rel="shortcut icon" href="img/favicon.ico"> -->
-
-        <!-- <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
-        <script src="RangeSlider.js"></script> -->
-
         <title>MyPlayer</title>
         <style>
             /*标题*/
-            /*.title{
-                background: #ccc;
-            }*/
             h1 {
                 color: white;
                 text-align: center;
@@ -32,13 +17,7 @@
             body {
                 background: url(bkg/camera-vintage.jpg) center;
                 background-size: cover;
-                /*height: 100%;*/
-                /*display: block;*/
             }
-
-            /*.cover {
-                width:
-            }*/
 
             /*歌词*/
             .lyric {
@@ -170,15 +149,6 @@
                 top: 0px;
                 left: 82%;
             }
-
-            /*bootstrap 的东西*/
-            /*.btn-group {
-                position: relative;
-                top: -56px;
-                left: 192px;
-                cursor: pointer;
-            }*/
-
         </style>
     </head>
     <body>
@@ -187,10 +157,6 @@
             <div class="title">
                 <h1>Are You OK</h1>
             </div>
-            <!-- 封面 -->
-            <!-- <div class="cover">
-                <img src="" alt="">
-            </div> -->
             <!-- 歌词 -->
             <div class="lyric">
                 <div id="id-div-lrc" data-jumpedindex="" data-curheight=""></div>
@@ -225,17 +191,6 @@
                 <div class="processbar">
                     <div class="player-slider">
                         <input id="id-input-slider" type="range" value="0" min="0" max="100">
-                        <!-- <span id="id-span-timebar" class="ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min" style="width: 47%;"></span> -->
-                        <!-- <div id="id-input-slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false">
-                            <div class="ui-slider-segment" style="margin-left: 40%;"></div>
-                            <div class="ui-slider-segment" style="margin-left: 40%;"></div>
-                            <div class="ui-slider-segment"></div>
-                            <div class="ui-slider-segment"></div>
-                            <div class="ui-slider-segment"></div>
-                            <div id="id-div-timebar" class="ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min" style="width: 0%;"></div>
-                            <div id="id-div-playedbar" class="ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min" style="width: 0%;"></div>
-                            <a id="id-a-point" class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 0%;"></a>
-                        </div> -->
                     </div>
                     <div class="player-time">
                         <time id="id-time-current">00:00</time>
@@ -440,8 +395,4 @@
         </div>
     </body>
     <script src="audio.js"></script>
-    <!-- <script src="dist/js/vendor/jquery.min.js"></script>
-    <script src="dist/js/vendor/video.js"></script>
-    <script src="dist/js/flat-ui.min.js"></script>
-    <script src="docs/assets/js/application.js"></script> -->
 </html>
